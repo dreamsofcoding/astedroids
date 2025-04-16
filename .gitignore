@@ -83,3 +83,46 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+
+
+
+# Android Studio
+.idea/
+
+# Gradle
+!gradle-wrapper.jar
+!**/src/**/build.gradle
+!**/src/**/build.gradle.kts
+
+
+# Kotlin/Java
+*.jar
+*.war
+*.ear
+
+# Log & crash files
+crashlytics-build.properties
+
+# Generated files
+/captures/
+/output/
+
+# IntelliJ
+*.iws
+*.ipr
+
+# Mac/Linux/Windows system files
+Thumbs.db
+
+# Android specific build artifacts
+**/build/
+**/captures/
+*.so
+
+# Signing keys or credentials (customize this if needed)
+*.keystore
+*.jks
+/app/.gitignore
+/.gitignore
+
+
