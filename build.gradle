@@ -6,7 +6,7 @@ buildscript {
         version_constraint_layout = "2.2.1"
         version_core = "1.16.0"
         version_glide = "4.16.0"
-        version_gradle = '8.9.1'
+        version_gradle = '8.9.2'
         version_kotlin = '2.1.10'
         version_lifecycle = "2.8.7"
         version_moshi = "1.15.2"
