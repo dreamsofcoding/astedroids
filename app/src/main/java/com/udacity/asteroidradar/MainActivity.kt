@@ -3,15 +3,15 @@ package com.udacity.asteroidradar
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
+import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.udacity.asteroidradar.view.detail.DetailFragmentArgs
 import com.udacity.asteroidradar.viewmodels.MainViewModel
 import timber.log.Timber
 
@@ -42,38 +42,48 @@ class MainActivity : AppCompatActivity() {
 
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-       setupListeners()
+        setupListeners()
     }
 
     private fun setupListeners() {
+        mainViewModel.asteroids.observe(this) {
+            navController.currentDestination?.let { destination -> updateAppBarTitle(destination) }
+        }
+
         navController.addOnDestinationChangedListener { _, destination, arguments ->
+            updateAppBarTitle(destination, arguments)
+        }
+    }
 
-            val appName = getString(R.string.app_name)
+    private fun updateAppBarTitle(destination: NavDestination, arguments: Bundle? = null) {
+        val appName = getString(R.string.app_name)
 
-            when (destination.id) {
-                R.id.mainFragment -> {
-                    val asteroids = mainViewModel.asteroids.value.orEmpty()
-                    val hasHazardous = asteroids.any { it.isPotentiallyHazardous }
+        when (destination.id) {
+            R.id.mainFragment -> {
+                val asteroids = mainViewModel.asteroids.value.orEmpty()
+                val hasHazardous = asteroids.any { it.isPotentiallyHazardous }
 
-                    val statusMessage = if (hasHazardous) {
-                        "!Hazard!"
-                    } else {
-                        "Safe"
-                    }
-
-                    supportActionBar?.title = "$appName - $statusMessage"
+                val statusMessage = if (hasHazardous) {
+                    "Hazard!"
+                } else {
+                    "Safe"
                 }
 
-                R.id.detailFragment -> {
-                    val asteroidName = arguments?.getString("asteroidCodename") ?: "Asteroid Details"
-                    supportActionBar?.title = "$appName - $asteroidName"
-                }
+                supportActionBar?.title = "$appName - $statusMessage"
+            }
 
-                else -> {
-                    // Default fallback
-                    val fragmentLabel = destination.label ?: ""
-                    supportActionBar?.title = "$appName - $fragmentLabel"
-                }
+            R.id.detailFragment -> {
+
+                val asteroidName = arguments?.let {
+                        DetailFragmentArgs.fromBundle(it).selectedAsteroid.codename
+                    } ?: "Asteroid Details"
+                supportActionBar?.title = "$appName - $asteroidName"
+            }
+
+            else -> {
+                // Default fallback
+                val fragmentLabel = destination.label ?: ""
+                supportActionBar?.title = "$appName - $fragmentLabel"
             }
         }
     }
