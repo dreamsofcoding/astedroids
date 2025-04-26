@@ -2,18 +2,26 @@ package com.udacity.asteroidradar.view.main
 
 import android.os.Bundle
 import android.view.*
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.udacity.asteroidradar.R
+import com.udacity.asteroidradar.database.AsteroidDatabase
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
+import com.udacity.asteroidradar.viewmodels.AsteroidFilter
 import com.udacity.asteroidradar.viewmodels.MainViewModel
+import com.udacity.asteroidradar.viewmodels.MainViewModelFactory
 
 class MainFragment : Fragment() {
 
-    private val viewModel: MainViewModel by activityViewModels()
+    private val viewModel: MainViewModel by activityViewModels {
+        MainViewModelFactory(AsteroidDatabase.getDatabase(requireActivity()))
+    }
 
     private lateinit var binding: FragmentMainBinding
 
@@ -25,30 +33,62 @@ class MainFragment : Fragment() {
         binding = FragmentMainBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-
-        setHasOptionsMenu(true)
-        observeTheViewModel()
-        setupAdapter()
-
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        observeTheViewModel()
+        setupAdapter()
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.main_overflow_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
+        val menuHost: MenuHost = requireActivity()
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return true
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.main_overflow_menu, menu)
+
+                viewModel.filter.observe(viewLifecycleOwner) { currentFilter ->
+
+                    menu.findItem(R.id.show_today_menu)?.isChecked = false
+                    menu.findItem(R.id.show_week_menu)?.isChecked = false
+                    menu.findItem(R.id.show_all_menu)?.isChecked = false
+
+                    when (currentFilter) {
+                        AsteroidFilter.SHOW_TODAY -> menu.findItem(R.id.show_today_menu)?.isChecked = true
+                        AsteroidFilter.SHOW_WEEK -> menu.findItem(R.id.show_week_menu)?.isChecked = true
+                        AsteroidFilter.SHOW_ALL -> menu.findItem(R.id.show_all_menu)?.isChecked = true
+                    }
+                }
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.show_today_menu -> {
+                        viewModel.updateFilter(AsteroidFilter.SHOW_TODAY)
+                        true
+                    }
+                    R.id.show_week_menu -> {
+                        viewModel.updateFilter(AsteroidFilter.SHOW_WEEK)
+                        true
+                    }
+                    R.id.show_all_menu -> {
+                        viewModel.updateFilter(AsteroidFilter.SHOW_ALL)
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun setupAdapter() {
         asteroidAdapter = AsteroidAdapter { selectedAsteroid ->
             viewModel.displayAsteroidDetails(selectedAsteroid)
         }
-        binding.asteroidRecycler.adapter = asteroidAdapter
-
+        binding.asteroidRecycler.apply {
+            adapter = asteroidAdapter
+            itemAnimator = androidx.recyclerview.widget.DefaultItemAnimator()
+        }
     }
 
     private fun observeTheViewModel() {

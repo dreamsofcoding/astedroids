@@ -11,15 +11,19 @@ import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.udacity.asteroidradar.database.AsteroidDatabase
 import com.udacity.asteroidradar.view.detail.DetailFragmentArgs
 import com.udacity.asteroidradar.viewmodels.MainViewModel
+import com.udacity.asteroidradar.viewmodels.MainViewModelFactory
 import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
 
-    private val mainViewModel: MainViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels {
+        MainViewModelFactory(AsteroidDatabase.getDatabase(this))
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,33 +65,27 @@ class MainActivity : AppCompatActivity() {
         when (destination.id) {
             R.id.mainFragment -> {
                 val asteroids = mainViewModel.asteroids.value.orEmpty()
+
                 val hasHazardous = asteroids.any { it.isPotentiallyHazardous }
 
-                val statusMessage = if (hasHazardous) {
-                    "Hazard!"
-                } else {
-                    "Safe"
-                }
+                val statusMessage = if (hasHazardous) "Hazard!" else "Safe"
 
-                supportActionBar?.title = "$appName - $statusMessage"
+                supportActionBar?.title =
+                    if (asteroids.isNotEmpty()) "$appName - $statusMessage" else appName
             }
 
             R.id.detailFragment -> {
-
                 val asteroidName = arguments?.let {
-                        DetailFragmentArgs.fromBundle(it).selectedAsteroid.codename
-                    } ?: "Asteroid Details"
+                    DetailFragmentArgs.fromBundle(it).selectedAsteroid.codename
+                } ?: "Asteroid Details"
                 supportActionBar?.title = "$appName - $asteroidName"
             }
 
             else -> {
-                // Default fallback
-                val fragmentLabel = destination.label ?: ""
-                supportActionBar?.title = "$appName - $fragmentLabel"
+                supportActionBar?.title = appName
             }
         }
     }
-
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
