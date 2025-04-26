@@ -1,18 +1,26 @@
 package com.udacity.asteroidradar
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.udacity.asteroidradar.viewmodels.MainViewModel
 import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var navController: NavController
+
+    private val mainViewModel: MainViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,24 +36,51 @@ class MainActivity : AppCompatActivity() {
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
+        navController = navHostFragment.navController
 
         val appBarConfiguration = AppBarConfiguration(navController.graph)
 
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        navController.addOnDestinationChangedListener { _, destination, _ ->
+       setupListeners()
+    }
+
+    private fun setupListeners() {
+        navController.addOnDestinationChangedListener { _, destination, arguments ->
+
             val appName = getString(R.string.app_name)
-            val fragmentLabel = destination.label ?: ""
-            supportActionBar?.title = "$appName - $fragmentLabel"
+
+            when (destination.id) {
+                R.id.mainFragment -> {
+                    val asteroids = mainViewModel.asteroids.value.orEmpty()
+                    val hasHazardous = asteroids.any { it.isPotentiallyHazardous }
+
+                    val statusMessage = if (hasHazardous) {
+                        "!Hazard!"
+                    } else {
+                        "Safe"
+                    }
+
+                    supportActionBar?.title = "$appName - $statusMessage"
+                }
+
+                R.id.detailFragment -> {
+                    val asteroidName = arguments?.getString("asteroidCodename") ?: "Asteroid Details"
+                    supportActionBar?.title = "$appName - $asteroidName"
+                }
+
+                else -> {
+                    // Default fallback
+                    val fragmentLabel = destination.label ?: ""
+                    supportActionBar?.title = "$appName - $fragmentLabel"
+                }
+            }
         }
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment)
-        val currentDestination = navController.currentDestination?.id
 
-        return false
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
 
     }
 }

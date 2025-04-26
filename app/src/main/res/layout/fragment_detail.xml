@@ -46,11 +46,11 @@
                     android:orientation="vertical">
 
                     <TextView
+                        style="@style/StyledHeadingText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:contentDescription="Close Approach Date Label"
-                        android:text="@string/close_approach_data_title"
-                        android:textColor="@color/default_text_color" />
+                        android:text="@string/close_approach_data_title" />
 
                     <TextView
                         android:id="@+id/close_approach_date"
@@ -60,7 +60,7 @@
                         android:contentDescription="@{`Close Approach Date: ` + asteroid.closeApproachDate}"
                         android:importantForAccessibility="yes"
                         android:text="@{asteroid.closeApproachDate}"
-                        android:textColor="@color/default_text_color"
+                        style="@style/StyledBodyText"
                         tools:text="2020-02-01" />
                 </LinearLayout>
 
@@ -78,11 +78,11 @@
                         android:orientation="vertical">
 
                         <TextView
+                            style="@style/StyledHeadingText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:contentDescription="Absolute Magnitude Label"
-                            android:text="@string/absolute_magnitude_title"
-                            android:textColor="@color/default_text_color" />
+                            android:text="@string/absolute_magnitude_title" />
 
                         <TextView
                             android:id="@+id/absolute_magnitude"
@@ -91,7 +91,7 @@
                             android:layout_marginTop="4dp"
                             android:contentDescription="@{`Absolute Magnitude: ` + String.format(`%.2f`, asteroid.absoluteMagnitude) + ` astronomical units`}"
                             android:importantForAccessibility="yes"
-                            android:textColor="@color/default_text_color"
+                            style="@style/StyledBodyText"
                             app:astronomicalUnitText="@{asteroid.absoluteMagnitude}"
                             tools:text="25.126 au" />
                     </LinearLayout>
@@ -108,56 +108,56 @@
                 </LinearLayout>
 
                 <TextView
+                    style="@style/StyledHeadingText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:contentDescription="Estimated Diameter Label"
-                    android:text="@string/estimated_diameter_title"
-                    android:textColor="@color/default_text_color" />
+                    android:text="@string/estimated_diameter_title" />
 
                 <TextView
                     android:id="@+id/estimated_diameter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:textColor="@color/default_text_color"
                     android:contentDescription="@{`Estimated Diameter: ` + String.format(`%.2f`, asteroid.estimatedDiameter) + ` kilometers`}"
+                    style="@style/StyledBodyText"
                     app:kmUnitText="@{asteroid.estimatedDiameter}"
                     tools:text="0.82 km" />
 
                 <TextView
+                    style="@style/StyledHeadingText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:contentDescription="Relative Velocity Label"
-                    android:text="@string/relative_velocity_title"
-                    android:textColor="@color/default_text_color" />
+                    android:text="@string/relative_velocity_title" />
 
                 <TextView
                     android:id="@+id/relative_velocity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:textColor="@color/default_text_color"
                     android:contentDescription="@{`Relative Velocity: ` + String.format(`%.2f`, asteroid.relativeVelocity) + ` kilometers per second`}"
+                    style="@style/StyledBodyText"
                     app:velocityText="@{asteroid.relativeVelocity}"
                     tools:text="11.9 km/s" />
 
                 <TextView
+                    style="@style/StyledHeadingText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:contentDescription="Distance From Earth Label"
-                    android:text="@string/distance_from_earth_title"
-                    android:textColor="@color/default_text_color" />
+                    android:text="@string/distance_from_earth_title" />
 
                 <TextView
                     android:id="@+id/distance_from_earth"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:textColor="@color/default_text_color"
                     android:contentDescription="@{`Distance From Earth: ` + String.format(`%.2f`, asteroid.distanceFromEarth) + ` astronomical units`}"
+                    style="@style/StyledBodyText"
                     app:astronomicalUnitText="@{asteroid.distanceFromEarth}"
                     tools:text="0.0924 au" />
 
