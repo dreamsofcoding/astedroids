@@ -3,6 +3,7 @@ package com.udacity.asteroidradar.repository
 import com.udacity.asteroidradar.api.NasaApi
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.model.Asteroid
+import com.udacity.asteroidradar.model.PictureOfDay
 import com.udacity.asteroidradar.utils.Constants
 import com.udacity.asteroidradar.utils.Constants.DEFAULT_END_DATE_DAYS
 import com.udacity.asteroidradar.utils.DateUtils
@@ -17,7 +18,6 @@ class AsteroidRepository {
             val response = NasaApi.retrofitService.getAsteroidFeed(
                 startDate = DateUtils.getToday(),
                 endDate = DateUtils.getDateNDaysFromToday(DEFAULT_END_DATE_DAYS),
-                apiKey = Constants.API_KEY
             )
 
             if (response.isSuccessful) {
@@ -27,6 +27,22 @@ class AsteroidRepository {
                 } else emptyList()
             } else {
                 emptyList()
+            }
+        }
+    }
+
+    suspend fun getPictureOfDay(): PictureOfDay? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = NasaApi.retrofitService.getPictureOfDay()
+                if (response.mediaType == "image") {
+                    response
+                } else {
+                    null // Ignore if it's a video
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
             }
         }
     }

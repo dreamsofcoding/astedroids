@@ -3,6 +3,7 @@ package com.udacity.asteroidradar.view.main
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
@@ -10,22 +11,26 @@ import com.udacity.asteroidradar.viewmodels.MainViewModel
 
 class MainFragment : Fragment() {
 
-    private val viewModel: MainViewModel by lazy {
-        ViewModelProvider(this).get(MainViewModel::class.java)
-    }
+    private val viewModel: MainViewModel by viewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val binding = FragmentMainBinding.inflate(inflater)
-        binding.lifecycleOwner = this
+    private lateinit var binding: FragmentMainBinding
+
+    private lateinit var asteroidAdapter: AsteroidAdapter
+
+
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = FragmentMainBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
         setHasOptionsMenu(true)
+        observeTheViewModel()
+        setupAdapter()
 
         return binding.root
-
-
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.main_overflow_menu, menu)
@@ -34,5 +39,19 @@ class MainFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return true
+    }
+
+    private fun setupAdapter() {
+        asteroidAdapter = AsteroidAdapter { selectedAsteroid ->
+            viewModel.displayAsteroidDetails(selectedAsteroid)
+        }
+        binding.asteroidRecycler.adapter = asteroidAdapter
+
+    }
+
+    private fun observeTheViewModel() {
+        viewModel.asteroids.observe(viewLifecycleOwner) { asteroids ->
+            asteroidAdapter.submitList(asteroids)
+        }
     }
 }

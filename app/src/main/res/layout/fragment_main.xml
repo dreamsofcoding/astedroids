@@ -7,6 +7,10 @@
             name="viewModel"
             type="com.udacity.asteroidradar.viewmodels.MainViewModel" />
 
+        <variable
+            name="view"
+            type="com.google.android.material.progressindicator.CircularProgressIndicator" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,6 +32,9 @@
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
+                app:pictureOfDay="@{viewModel.pictureOfDay}"
+                android:contentDescription="Picture of the Asteroid of the Day"
+                android:importantForAccessibility="yes"
                 app:srcCompat="@drawable/placeholder_picture_of_day"/>
 
             <TextView
@@ -40,7 +47,9 @@
                 android:textSize="20sp"
                 android:layout_gravity="bottom"
                 android:background="#55010613"
-                android:text="@string/image_of_the_day" />
+                android:contentDescription="@{`Asteroid of the Day: ` + viewModel.pictureOfDay.title}"
+                android:importantForAccessibility="yes"
+                android:text="@{viewModel.pictureOfDay.title != null ? viewModel.pictureOfDay.title : @string/image_of_the_day}" />
         </FrameLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -55,15 +64,16 @@
             app:layout_constraintTop_toBottomOf="@+id/activity_main_image_of_the_day_layout"
             app:layout_constraintVertical_bias="0.0" />
 
-        <ProgressBar
+        <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/status_loading_wheel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:indeterminate="true"
-            android:visibility="gone"
+            android:visibility="@{viewModel.isLoading ? view.VISIBLE : view.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
