@@ -13,6 +13,7 @@ import com.udacity.asteroidradar.model.PictureOfDay
 import com.udacity.asteroidradar.repository.AsteroidRepository
 import com.udacity.asteroidradar.utils.DateUtils
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 
 
@@ -22,10 +23,7 @@ class MainViewModel(
 
     private val repository = AsteroidRepository(database)
 
-
-    private val _pictureOfDay = MutableLiveData<PictureOfDay>()
-    val pictureOfDay: LiveData<PictureOfDay>
-        get() = _pictureOfDay
+    val picturesOfDay = repository.cachedPictures
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean>
@@ -72,8 +70,7 @@ class MainViewModel(
             val asteroidsDeferred = async { repository.getAsteroids() }
             val pictureDeferred = async { repository.getPictureOfDay() }
 
-            asteroidsDeferred.await()
-            _pictureOfDay.value = pictureDeferred.await()
+            awaitAll(asteroidsDeferred, pictureDeferred)
 
             hideLoading()
         }

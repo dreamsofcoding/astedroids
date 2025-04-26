@@ -1,0 +1,40 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="picture"
+            type="com.udacity.asteroidradar.database.PictureOfDayEntity" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/image_of_the_day"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            app:pictureOfDayUrl="@{picture.url}"
+            android:contentDescription="Picture of the Asteroid of the Day"
+            android:importantForAccessibility="yes"
+            app:srcCompat="@drawable/placeholder_picture_of_day"/>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_gravity="bottom"
+            android:background="#55010613"
+            android:contentDescription="@{`Asteroid of the Day: ` + picture.title}"
+            android:importantForAccessibility="yes"
+            app:pictureTitleText="@{picture.title}" />
+
+    </FrameLayout>
+</layout>

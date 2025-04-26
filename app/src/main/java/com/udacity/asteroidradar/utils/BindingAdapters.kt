@@ -55,3 +55,22 @@ fun bindPictureOfDay(imageView: ImageView, pictureOfDay: PictureOfDay?) {
         imageView.setImageResource(R.drawable.placeholder_picture_of_day)
     }
 }
+
+@BindingAdapter("pictureOfDayUrl")
+fun bindPictureOfDayUrl(imageView: ImageView, url: String?) {
+    if (!url.isNullOrEmpty()) {
+        Picasso.with(imageView.context)
+            .load(url)
+            .placeholder(R.drawable.placeholder_picture_of_day)
+            .error(R.drawable.placeholder_picture_of_day)
+            .into(imageView)
+    } else {
+        imageView.setImageResource(R.drawable.placeholder_picture_of_day)
+    }
+}
+
+@BindingAdapter("pictureTitleText")
+fun bindPictureTitleText(textView: TextView, title: String?) {
+    textView.text = title ?: textView.context.getString(R.string.image_of_the_day)
+}
+

@@ -1,14 +1,17 @@
 package com.udacity.asteroidradar.view.main
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.database.AsteroidDatabase
@@ -28,8 +31,11 @@ class MainFragment : Fragment() {
     private lateinit var asteroidAdapter: AsteroidAdapter
 
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentMainBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
@@ -39,7 +45,8 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeTheViewModel()
-        setupAdapter()
+        setupAsteroidAdapter()
+        setupPhotoOfTheDayAdapter()
 
         val menuHost: MenuHost = requireActivity()
 
@@ -54,9 +61,14 @@ class MainFragment : Fragment() {
                     menu.findItem(R.id.show_all_menu)?.isChecked = false
 
                     when (currentFilter) {
-                        AsteroidFilter.SHOW_TODAY -> menu.findItem(R.id.show_today_menu)?.isChecked = true
-                        AsteroidFilter.SHOW_WEEK -> menu.findItem(R.id.show_week_menu)?.isChecked = true
-                        AsteroidFilter.SHOW_ALL -> menu.findItem(R.id.show_all_menu)?.isChecked = true
+                        AsteroidFilter.SHOW_TODAY -> menu.findItem(R.id.show_today_menu)?.isChecked =
+                            true
+
+                        AsteroidFilter.SHOW_WEEK -> menu.findItem(R.id.show_week_menu)?.isChecked =
+                            true
+
+                        AsteroidFilter.SHOW_ALL -> menu.findItem(R.id.show_all_menu)?.isChecked =
+                            true
                     }
                 }
             }
@@ -67,21 +79,33 @@ class MainFragment : Fragment() {
                         viewModel.updateFilter(AsteroidFilter.SHOW_TODAY)
                         true
                     }
+
                     R.id.show_week_menu -> {
                         viewModel.updateFilter(AsteroidFilter.SHOW_WEEK)
                         true
                     }
+
                     R.id.show_all_menu -> {
                         viewModel.updateFilter(AsteroidFilter.SHOW_ALL)
                         true
                     }
+
                     else -> false
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    private fun setupAdapter() {
+    private fun setupPhotoOfTheDayAdapter() {
+        val adapter = PictureAdapter()
+        binding.pictureOfDayPager.adapter = adapter
+
+        viewModel.picturesOfDay.observe(viewLifecycleOwner) { pictures ->
+            adapter.submitList(pictures)
+        }
+    }
+
+    private fun setupAsteroidAdapter() {
         asteroidAdapter = AsteroidAdapter { selectedAsteroid ->
             viewModel.displayAsteroidDetails(selectedAsteroid)
         }
