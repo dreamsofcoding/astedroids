@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.database.AsteroidDatabase
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
+import com.udacity.asteroidradar.utils.NetworkHelper
 import com.udacity.asteroidradar.viewmodels.AsteroidFilter
 import com.udacity.asteroidradar.viewmodels.MainViewModel
 import com.udacity.asteroidradar.viewmodels.MainViewModelFactory
@@ -23,7 +24,10 @@ import com.udacity.asteroidradar.viewmodels.MainViewModelFactory
 class MainFragment : Fragment() {
 
     private val viewModel: MainViewModel by activityViewModels {
-        MainViewModelFactory(AsteroidDatabase.getDatabase(requireActivity()))
+        MainViewModelFactory(
+            AsteroidDatabase.getDatabase(requireActivity()),
+            NetworkHelper(requireActivity())
+        )
     }
 
     private lateinit var binding: FragmentMainBinding
@@ -103,9 +107,14 @@ class MainFragment : Fragment() {
         }
 
         viewModel.picturesOfDay.observe(viewLifecycleOwner) { pictures ->
-            adapter.submitList(pictures.reversed())
-            binding.pictureOfDayPager.setCurrentItem(adapter.itemCount - 1, false)
+            val picturesToDisplay = if (pictures.size > 1) {
+                pictures.filterNot { it.url.isEmpty() && it.title == "No Image Available" }
+            } else {
+                pictures
+            }
+            adapter.submitList(picturesToDisplay)
         }
+
     }
 
     private fun setupAsteroidAdapter() {

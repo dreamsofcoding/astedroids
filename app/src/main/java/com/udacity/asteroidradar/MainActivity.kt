@@ -12,6 +12,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.udacity.asteroidradar.database.AsteroidDatabase
+import com.udacity.asteroidradar.utils.NetworkHelper
 import com.udacity.asteroidradar.view.detail.DetailFragmentArgs
 import com.udacity.asteroidradar.viewmodels.MainViewModel
 import com.udacity.asteroidradar.viewmodels.MainViewModelFactory
@@ -22,7 +23,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
 
     private val mainViewModel: MainViewModel by viewModels {
-        MainViewModelFactory(AsteroidDatabase.getDatabase(this))
+        MainViewModelFactory(
+            AsteroidDatabase.getDatabase(this),
+            NetworkHelper(this)
+        )
     }
 
 

@@ -19,8 +19,7 @@
             android:scaleType="centerCrop"
             app:pictureOfDayUrl="@{picture.url}"
             android:contentDescription="Picture of the Asteroid of the Day"
-            android:importantForAccessibility="yes"
-            app:srcCompat="@drawable/placeholder_picture_of_day"/>
+            android:importantForAccessibility="yes"/>
 
         <TextView
             android:id="@+id/textView"

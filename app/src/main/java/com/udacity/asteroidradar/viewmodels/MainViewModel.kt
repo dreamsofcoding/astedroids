@@ -9,19 +9,22 @@ import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.database.AsteroidDatabase
 import com.udacity.asteroidradar.database.asDomainModel
 import com.udacity.asteroidradar.model.Asteroid
-import com.udacity.asteroidradar.model.PictureOfDay
 import com.udacity.asteroidradar.repository.AsteroidRepository
 import com.udacity.asteroidradar.utils.DateUtils
+import com.udacity.asteroidradar.utils.NetworkHelper
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 class MainViewModel(
-    private val database: AsteroidDatabase
+    private val database: AsteroidDatabase,
+    private val networkHelper: NetworkHelper
 ) : ViewModel() {
 
-    private val repository = AsteroidRepository(database)
+    private val repository = AsteroidRepository(database, networkHelper)
 
     val picturesOfDay = repository.cachedPictures
 
@@ -47,11 +50,13 @@ class MainViewModel(
                 AsteroidFilter.SHOW_TODAY -> {
                     domainList.filter { it.closeApproachDate == DateUtils.getToday() }
                 }
+
                 AsteroidFilter.SHOW_WEEK -> {
                     val start = DateUtils.getToday()
                     val end = DateUtils.getDateNDaysFromToday(7)
                     domainList.filter { it.closeApproachDate in start..end }
                 }
+
                 AsteroidFilter.SHOW_ALL -> {
                     domainList
                 }
@@ -66,22 +71,26 @@ class MainViewModel(
 
     private fun loadData() {
         showLoading()
-        viewModelScope.launch {
-            val asteroidsDeferred = async { repository.getAsteroids() }
-            val pictureDeferred = async { repository.getPictureOfDay() }
+        viewModelScope.launch(Dispatchers.IO)  {
+            try {
+                val asteroidsDeferred = async { repository.getAsteroids() }
+                val pictureDeferred = async { repository.getPictureOfDay() }
 
-            awaitAll(asteroidsDeferred, pictureDeferred)
-
-            hideLoading()
+                awaitAll(asteroidsDeferred, pictureDeferred)
+            } catch (e : Exception) {
+                Timber.e("MainViewModel Error fetching data: $e")
+            } finally {
+                hideLoading()
+            }
         }
     }
 
     private fun showLoading() {
-        _isLoading.value = true
+        _isLoading.postValue(true)
     }
 
     private fun hideLoading() {
-        _isLoading.value = false
+        _isLoading.postValue(false)
     }
 
     fun displayAsteroidDetails(asteroid: Asteroid) {
