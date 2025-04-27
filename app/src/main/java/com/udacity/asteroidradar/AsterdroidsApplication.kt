@@ -20,6 +20,7 @@ class AsterdroidsApplication  : Application() {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.UNMETERED)
             .setRequiresCharging(true)
+            .setRequiresBatteryNotLow(true)
             .build()
 
         val repeatingRequest = PeriodicWorkRequestBuilder<AsteroidsWorker>(1, TimeUnit.DAYS)

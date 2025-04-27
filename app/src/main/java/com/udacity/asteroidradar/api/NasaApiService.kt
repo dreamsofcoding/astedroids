@@ -1,5 +1,6 @@
 package com.udacity.asteroidradar.api
 
+import com.udacity.asteroidradar.BuildConfig
 import com.udacity.asteroidradar.model.PictureOfDay
 import com.udacity.asteroidradar.utils.Constants
 import okhttp3.ResponseBody
@@ -13,11 +14,11 @@ interface NasaApiService {
     suspend fun getAsteroidFeed(
         @Query("start_date") startDate: String,
         @Query("end_date") endDate: String,
-        @Query("api_key") apiKey: String = Constants.API_KEY
+        @Query("api_key") apiKey: String = BuildConfig.apiKey
     ): Response<ResponseBody>
 
    @GET("planetary/apod")
     suspend fun getPictureOfDay(
-        @Query("api_key") apiKey: String = Constants.API_KEY
+        @Query("api_key") apiKey: String = BuildConfig.apiKey
     ): PictureOfDay
 }
