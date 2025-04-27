@@ -21,6 +21,7 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:contentDescription="@{asteroid.isPotentiallyHazardous ? @string/potentially_hazardous_asteroid_image : @string/not_hazardous_asteroid_image}"
+            android:nextFocusDown="@id/close_approach_date"
             app:asteroidStatusImage="@{asteroid.isPotentiallyHazardous}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -54,13 +55,14 @@
 
                     <TextView
                         android:id="@+id/close_approach_date"
+                        style="@style/StyledBodyText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:contentDescription="@{`Close Approach Date: ` + asteroid.closeApproachDate}"
                         android:importantForAccessibility="yes"
+                        android:nextFocusDown="@id/absolute_magnitude"
                         android:text="@{asteroid.closeApproachDate}"
-                        style="@style/StyledBodyText"
                         tools:text="2020-02-01" />
                 </LinearLayout>
 
@@ -86,12 +88,13 @@
 
                         <TextView
                             android:id="@+id/absolute_magnitude"
+                            style="@style/StyledBodyText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:contentDescription="@{`Absolute Magnitude: ` + String.format(`%.2f`, asteroid.absoluteMagnitude) + ` astronomical units`}"
                             android:importantForAccessibility="yes"
-                            style="@style/StyledBodyText"
+                            android:nextFocusRight="@id/help_button"
                             app:astronomicalUnitText="@{asteroid.absoluteMagnitude}"
                             tools:text="25.126 au" />
                     </LinearLayout>
@@ -102,6 +105,7 @@
                         android:layout_height="wrap_content"
                         android:contentDescription="Help Button"
                         android:importantForAccessibility="yes"
+                        android:nextFocusDown="@id/estimated_diameter"
                         android:padding="16dp"
                         app:srcCompat="@drawable/ic_help_circle" />
 
@@ -117,11 +121,12 @@
 
                 <TextView
                     android:id="@+id/estimated_diameter"
+                    style="@style/StyledBodyText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:contentDescription="@{`Estimated Diameter: ` + String.format(`%.2f`, asteroid.estimatedDiameter) + ` kilometers`}"
-                    style="@style/StyledBodyText"
+                    android:nextFocusDown="@id/relative_velocity"
                     app:kmUnitText="@{asteroid.estimatedDiameter}"
                     tools:text="0.82 km" />
 
@@ -135,11 +140,12 @@
 
                 <TextView
                     android:id="@+id/relative_velocity"
+                    style="@style/StyledBodyText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:contentDescription="@{`Relative Velocity: ` + String.format(`%.2f`, asteroid.relativeVelocity) + ` kilometers per second`}"
-                    style="@style/StyledBodyText"
+                    android:nextFocusDown="@id/distance_from_earth"
                     app:velocityText="@{asteroid.relativeVelocity}"
                     tools:text="11.9 km/s" />
 
@@ -153,11 +159,11 @@
 
                 <TextView
                     android:id="@+id/distance_from_earth"
+                    style="@style/StyledBodyText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:contentDescription="@{`Distance From Earth: ` + String.format(`%.2f`, asteroid.distanceFromEarth) + ` astronomical units`}"
-                    style="@style/StyledBodyText"
                     app:astronomicalUnitText="@{asteroid.distanceFromEarth}"
                     tools:text="0.0924 au" />
 
