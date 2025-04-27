@@ -19,6 +19,7 @@
             style="@style/StyledHeadingText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:nextFocusRight="@id/status_icon"
             android:text="@{asteroid.codename}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -26,10 +27,10 @@
 
         <TextView
             android:id="@+id/asteroid_close_approach_date"
+            style="@style/StyledBodyText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@{asteroid.closeApproachDate}"
-            style="@style/StyledBodyText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/asteroid_name" />
@@ -38,8 +39,9 @@
             android:id="@+id/status_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:contentDescription="Hazardous Icon"
+            android:contentDescription="@{asteroid.isPotentiallyHazardous ? `Hazardous` : `Safe`}"
             android:importantForAccessibility="yes"
+            android:nextFocusDown="@id/asteroid_close_approach_date"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

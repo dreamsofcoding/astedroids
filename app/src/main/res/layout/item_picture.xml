@@ -2,6 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="picture"
             type="com.udacity.asteroidradar.database.PictureOfDayEntity" />
@@ -16,23 +17,24 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            app:pictureOfDayUrl="@{picture.url}"
             android:contentDescription="@{picture.title != null ? `NASA Picture of the Day: ` + picture.title : @string/image_of_the_day}"
-            android:importantForAccessibility="yes"/>
+            android:importantForAccessibility="yes"
+            android:nextFocusDown="@id/textView"
+            android:scaleType="centerCrop"
+            app:pictureOfDayUrl="@{picture.url}" />
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:textSize="20sp"
             android:layout_gravity="bottom"
             android:background="#55010613"
             android:contentDescription="@{picture.title != null ? `NASA Picture of the Day Title: ` + picture.title : @string/image_of_the_day}"
             android:importantForAccessibility="yes"
+            android:padding="16dp"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
             app:pictureTitleText="@{picture.title}" />
 
     </FrameLayout>
