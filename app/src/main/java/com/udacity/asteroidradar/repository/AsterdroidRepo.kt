@@ -65,4 +65,10 @@ class AsteroidRepository(
             )
         }
     }
+
+    suspend fun deleteOldAsteroids() {
+        withContext(Dispatchers.IO) {
+            database.asteroidDao().deletePastAsteroids(DateUtils.getToday())
+        }
+    }
 }

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.udacity.asteroidradar.viewmodels.MainViewModel" />
@@ -30,9 +31,9 @@
                 android:id="@+id/picture_of_day_pager"
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
         </FrameLayout>
 

@@ -98,10 +98,13 @@ class MainFragment : Fragment() {
 
     private fun setupPhotoOfTheDayAdapter() {
         val adapter = PictureAdapter()
-        binding.pictureOfDayPager.adapter = adapter
+        binding.pictureOfDayPager.apply {
+            this.adapter = adapter
+        }
 
         viewModel.picturesOfDay.observe(viewLifecycleOwner) { pictures ->
-            adapter.submitList(pictures)
+            adapter.submitList(pictures.reversed())
+            binding.pictureOfDayPager.setCurrentItem(adapter.itemCount - 1, false)
         }
     }
 
