@@ -18,7 +18,7 @@
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             app:pictureOfDayUrl="@{picture.url}"
-            android:contentDescription="Picture of the Asteroid of the Day"
+            android:contentDescription="@{picture.title != null ? `NASA Picture of the Day: ` + picture.title : @string/image_of_the_day}"
             android:importantForAccessibility="yes"/>
 
         <TextView
@@ -31,7 +31,7 @@
             android:textSize="20sp"
             android:layout_gravity="bottom"
             android:background="#55010613"
-            android:contentDescription="@{`Asteroid of the Day: ` + picture.title}"
+            android:contentDescription="@{picture.title != null ? `NASA Picture of the Day Title: ` + picture.title : @string/image_of_the_day}"
             android:importantForAccessibility="yes"
             app:pictureTitleText="@{picture.title}" />
 
